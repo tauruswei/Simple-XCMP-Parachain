@@ -2,7 +2,7 @@
 
 This is a  project for learning exploring blockchain runtime development with
 [Substrate](https://substrate.dev/),  [Cumulus Parachain](https://github.com/paritytech/cumulus) and the
-[FRAME](https://substrate.dev/docs/en/knowledgebase/runtime/frame). 
+[FRAME](https://substrate.dev/docs/en/knowledgebase/runtime/frame).
 
 This project implements a simple  XCMP protocol between two parachains where one parachain makes pallet call of another parachain.
 
@@ -34,7 +34,7 @@ increment_counter method takes paraId and makes increment_counter_value() pallet
 ### Errors
 - `ErrorSettingCounter`
 - `ErrorIncrementingCounter`
-- 
+-
 ## Step1 Building the relay Chain node.
 
 ```sh
@@ -74,8 +74,8 @@ You can use pre configured chain spec file for testing from [here]()
 ./target/release/polkadot \
 --alice \
 --validator \
---base-path /tmp/relay/alice \
---chain ./rococo-custom-3-raw.json \
+--base-path /tmp/relay-alice \
+--chain ./rococo_local.json \
 --port 30333 \
 --ws-port 9944
 ```
@@ -86,8 +86,8 @@ You can use pre configured chain spec file for testing from [here]()
 --bob \
 --validator \
 --base-path /tmp/relay-bob \
---chain ./rococo-custom-3-raw.json \
---bootnodes /ip4/127.0.0.1/tcp/30333/p2p/<ALICE NODE IDENTIFIER> \
+--chain ./rococo_local.json \
+--bootnodes /ip4/127.0.0.1/tcp/30333/p2p/12D3KooWKYpSaYz9ByVsLFSq8rfqNbP5Zbad4i6FBT8MKuFd1Ez7 \
 --port 30334 \
 --ws-port 9945
 ```
@@ -98,8 +98,8 @@ You can use pre configured chain spec file for testing from [here]()
 --charlie \
 --validator \
 --base-path /tmp/relay-charlie \
---chain /Users/salman01z/Crypto/parachains/chain_spec_files/rococo-custom-3-raw.json \
---bootnodes /ip4/127.0.0.1/tcp/30333/p2p/<ALICE NODE IDENTIFIER>\
+--chain ./rococo_local.json \
+--bootnodes /ip4/127.0.0.1/tcp/30333/p2p/12D3KooWKYpSaYz9ByVsLFSq8rfqNbP5Zbad4i6FBT8MKuFd1Ez7 \
 --port 30335 \
 --ws-port 9946
 

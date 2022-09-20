@@ -5,7 +5,7 @@ description = "FRAME pallet template for defining custom runtime logic."
 version = "0.1.0"
 license = "Unlicense"
 homepage = "https://substrate.io"
-repository = "https://github.com/paritytech/substrate/"
+repository = "https://github.com/tauruswei/substrate/"
 edition = "2021"
 
 [package.metadata.docs.rs]
@@ -16,22 +16,22 @@ codec = { package = "parity-scale-codec", version = "2.0.0", features = ["derive
 scale-info = { version = "1.0.0", default-features = false, features = ["derive"] }
 serde = { version = "1.0.132", optional = true, features = ["derive"] }
 
-frame-benchmarking = { git = "https://github.com/paritytech/substrate", default-features = false, optional = true , branch = "polkadot-v0.9.16" }
-frame-support = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
-frame-system = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
-sp-runtime = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
-sp-std = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
-xcm = { git = "https://github.com/paritytech/polkadot", default-features = false , branch = "release-v0.9.16" }
+frame-benchmarking = { git = "https://github.com/tauruswei/substrate", default-features = false, optional = true , branch = "polkadot-v0.9.16" }
+frame-support = { git = "https://github.com/tauruswei/substrate", default-features = false , branch = "polkadot-v0.9.16" }
+frame-system = { git = "https://github.com/tauruswei/substrate", default-features = false , branch = "polkadot-v0.9.16" }
+sp-runtime = { git = "https://github.com/tauruswei/substrate", default-features = false , branch = "polkadot-v0.9.16" }
+sp-std = { git = "https://github.com/tauruswei/substrate", default-features = false , branch = "polkadot-v0.9.16" }
+xcm = { git = "https://github.com/tauruswei/polkadot", default-features = false , branch = "release-v0.9.16" }
 
 #cumulus dependencies
-cumulus-pallet-xcm = { git = 'https://github.com/paritytech/cumulus', branch = 'polkadot-v0.9.16', default-features = false }
-cumulus-primitives-core = { git = 'https://github.com/paritytech/cumulus', branch = 'polkadot-v0.9.16', default-features = false }
-
+cumulus-pallet-xcm = { git = 'https://github.com/tauruswei/cumulus', branch = 'polkadot-v0.9.16', default-features = false }
+cumulus-primitives-core = { git = 'https://github.com/tauruswei/cumulus', branch = 'polkadot-v0.9.16', default-features = false }
+log = { version = "0.4.14", default-features = false }
 [dev-dependencies]
 serde = { version = "1.0.132" }
-sp-core = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
-sp-runtime = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
-sp-io = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.16" }
+sp-core = { git = "https://github.com/tauruswei/substrate", default-features = false , branch = "polkadot-v0.9.16" }
+sp-runtime = { git = "https://github.com/tauruswei/substrate", default-features = false , branch = "polkadot-v0.9.16" }
+sp-io = { git = "https://github.com/tauruswei/substrate", default-features = false , branch = "polkadot-v0.9.16" }
 
 [features]
 default = ["std"]
@@ -47,5 +47,6 @@ std = [
 	"frame-benchmarking/std",
 	"cumulus-pallet-xcm/std",
 	"cumulus-primitives-core/std",
+	"log/std",
 ]
 try-runtime = [ "frame-support/try-runtime" ]
