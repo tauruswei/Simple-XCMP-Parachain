@@ -34,18 +34,11 @@ increment_counter method takes paraId and makes increment_counter_value() pallet
 ### Errors
 - `ErrorSettingCounter`
 - `ErrorIncrementingCounter`
--
-## Step1 Building the relay Chain node.
+### Step1 Building the relay Chain node.
 
 ```sh
 # Clone the Polkadot Repository
-$ git clone https://github.com/paritytech/polkadot.git
-
-# Switch into the Polkadot directory
-$ cd polkadot
-
-# Checkout the proper commit
-git checkout v0.9.16
+$ git clone -b release-v0.9.16  https://github.com/tauruswei/polkadot.git
 
 # Build the relay chain Node
 $ cargo build --release
@@ -54,8 +47,27 @@ $ cargo build --release
 $ ./target/release/polkadot --help
 
 ```
+### Step2 Building the parachain collector.
+```
+# 使用 build-2000.sh 脚本，可以跳过 step5 和 step6
+bash build-2000.sh
+```
 
-### 1.2 Generate relay chain spec file.
+你也可以手动编译 parachain-collector
+
+```sh
+# Clone the Polkadot Repository
+$ git clone -b polkadot-0.9.16-test https://github.com/tauruswei/Simple-XCMP-Parachain.git
+
+# Build the relay chain Node
+$ cargo build --release
+
+# Check if the help page prints to ensure the node is built correctly
+$ ./target/release/parachain-collator --help
+
+```
+
+### Step3 Generate relay chain spec file.
 There must be minimum 2 validator for 1 parachain. In this project we will be using two parachains , so therefore we will require 3 validator nodes
 Check here to learn more [here](https://docs.substrate.io/v3/runtime/chain-specs/).
 ```sh
@@ -66,9 +78,13 @@ Check here to learn more [here](https://docs.substrate.io/v3/runtime/chain-specs
 > rococo_local.json
 ```
 
-You can use pre configured chain spec file for testing from [here]()
-
-### 1.3 Start relay node with 3 validator Alice, Bob and Charlie
+### Step4 Start relay node with 3 validator： Alice, Bob and Charlie
+```
+bash start-alice.sh
+bash start-bob.sh
+bash start-chalie.sh
+```
+You can also manually start each of the three nodes：Alice, Bob and Charlie
 - Alice
 ```sh
 ./target/release/polkadot \
@@ -105,13 +121,7 @@ You can use pre configured chain spec file for testing from [here]()
 
 ```
 
-## Step2 Build Parachain
-
-### 2.1 Reserve Parachain ID
-	Resure Parachain ID using [Polkadot-js](https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A9944#/parachains/parathreads)
-	Parachain ids start with 2000
-
-### 2.2 Configure Parachain for Relay chain and Para ID
+### Step5 Configure Parachain for Relay chain （Para ID = 2000）
 
 - Generate Plain spec with:
 ```sh
@@ -144,9 +154,25 @@ You can use pre configured chain spec file for testing from [here]()
 ./target/release/parachain-collator export-genesis-state --chain rococo-local-parachain-2000-raw.json > para-2000-genesis
 ```
 
-### 2.3 Start Collator Node
+### Step6 Configure Parachain for Relay chain and （Para ID = 2001）
+```
+./target/release/parachain-collator build-spec --disable-default-bootnode > rococo-local-parachain-plain.json
+sed -in-place -e 's#"para_id": 1000#"para_id": 2001#g' ./rococo-local-parachain-plain.json
+sed -in-place -e 's#"parachainId": 1000#"parachainId": 2001#g' ./rococo-local-parachain-plain.json
+./target/release/parachain-collator build-spec --chain rococo-local-parachain-plain.json --raw --disable-default-bootnode > rococo-local-parachain-2001-raw.json
+./target/release/parachain-collator export-genesis-wasm --chain rococo-local-parachain-2001-raw.json > para-2001-wasm
+./target/release/parachain-collator export-genesis-state --chain rococo-local-parachain-2001-raw.json > para-2001-genesis
+```
+
+### Step7 Start parachain 2000
+方式一：
 ```sh
-	./target/release/parachain-collator \
+bash start-2000.sh 
+```
+方式二：
+```
+rm -rf /tmp/parachain1/alice
+./target/release/parachain-collator \
 	--alice \
 	--collator \
 	--force-authoring \
@@ -156,11 +182,38 @@ You can use pre configured chain spec file for testing from [here]()
 	--ws-port 8844 \
 	-- \
 	--execution wasm \
-	--chain ./rococo-custom-3-raw.json \
-	--bootnodes /ip4/127.0.0.1/tcp/30333/p2p/<Bootnode Identifier> \
+	--chain ./rococo_local.json \
+	--bootnodes /ip4/127.0.0.1/tcp/30333/p2p/12D3KooWChdwJ8DbTUeLha2XVwgtAwVmYznZZJdq2hskZbdXHbVr \
 	--port 30343 \
 	--ws-port 9977
 ```
 
-### Second Parachain
-Repeat All the above steps with different Para ID, base path and ports. Use same relay chain spec.
+### Step8 Start parachain 2001
+方式一：
+```sh
+bash start-2001.sh 
+```
+方式二：
+```
+rm -rf /tmp/parachain1/bob
+./target/release/parachain-collator \
+	--bob \
+	--collator \
+	--force-authoring \
+	--chain rococo-local-parachain-2001-raw.json \
+	--base-path /tmp/parachain1/bob \
+	--port 40334 \
+	--ws-port 8845 \
+	-- \
+	--execution wasm \
+	--chain ./rococo_local.json \
+	--bootnodes /ip4/127.0.0.1/tcp/30333/p2p/12D3KooWChdwJ8DbTUeLha2XVwgtAwVmYznZZJdq2hskZbdXHbVr \
+	--port 30344 \
+	--ws-port 9978
+```
+### Step 9 Experience cross-chain 
+Resure Parachain ID using [Polkadot-js](https://polkadot.js.org/apps/?rpc=ws%3A%2F%2F127.0.0.1%3A9944#/parachains/parathreads)
+
+Parachain ids start with 2000
+
+参考：https://zhuanlan.zhihu.com/p/402627766
